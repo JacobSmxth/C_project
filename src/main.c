@@ -6,7 +6,7 @@ int main() {
   char my_name[] = "Jacob Smith";
   int my_age = 20;
   char gf_name[] = "Cecilia Ippoliti";
-  list_add(&list, create_node('s', strlen(my_name) + 1, &my_name));
+  list_add(&list, create_node('s', strlen(my_name) + 1, NULL));
   list_add(&list, create_node('f', strlen(gf_name) + 1, &gf_name));
   print_list(list);
 
