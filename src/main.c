@@ -1,21 +1,77 @@
 #include "data_structures.h"
+#include <ctype.h>
+#include <stdbool.h>
+#include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
+bool is_int(const char *s) {
+  if (*s == '-' || *s == '+')
+    s++;
+
+  if (*s == '\0')
+    return false;
+
+  while (*s) {
+    if (!isdigit(*s)) {
+      return false;
+    }
+    s++;
+  }
+  return true;
+}
+
+bool is_char(const char *s) { return (strlen(s) == 1 && isalpha(*s)); }
+
+bool is_string(const char *s) {
+  if (strlen(s) <= 1) {
+    return false;
+  }
+
+  while (*s) {
+    if (isalpha(*s)) {
+      return true;
+    }
+    s++;
+  }
+
+  return false;
+}
+
 int main() {
-  LlNode *list = create_list();
-  char my_name[] = "Jacob Smith";
-  int my_age = 20;
-  char gf_name[] = "Cecilia Ippoliti";
-  list_add(&list, create_node('s', strlen(my_name) + 1, &my_name));
-  list_add(&list, create_node('f', strlen(gf_name) + 1, &gf_name));
-  print_list(list);
+  LlNode *the_values = create_list();
+  int i = 0;
+  while (i < 5) {
+    printf("What value would you like to add?: ");
+    char input[100];
 
-  DynArr *dynArr = create_dynarr();
+    fgets(input, sizeof(input), stdin);
 
-  dyn_add(dynArr, 's', strlen(my_name) + 1, &my_name);
-  dyn_add(dynArr, 'i', sizeof(my_age), NULL);
-  print_dyn(dynArr);
+    input[strcspn(input, "\n")] = '\0';
 
-  free_dyn(dynArr);
-  free_list(list);
+    char type;
+    if (is_string(input)) {
+      type = 's';
+      LlNode *new_node = create_node(type, strlen(input) + 1, input);
+      list_add(&the_values, new_node);
+    } else if (is_int(input)) {
+      type = 'i';
+      int parsed = atoi(input);
+      LlNode *new_node = create_node(type, sizeof(int), &parsed);
+      list_add(&the_values, new_node);
+    } else if (is_char(input)) {
+      type = 'c';
+      char parsed = input[0];
+      LlNode *new_node = create_node(type, sizeof(char), &parsed);
+      list_add(&the_values, new_node);
+    } else {
+      fprintf(stderr, "'%s' produced an error and was not picked up\n", input);
+      exit(EXIT_FAILURE);
+    }
+
+    i++;
+  }
+  print_list(the_values);
+  free_list(the_values);
+  return 0;
 }
