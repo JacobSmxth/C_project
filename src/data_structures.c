@@ -142,7 +142,7 @@ DynArr *create_dynarr() {
   return arr;
 }
 
-void dyn_add(DynArr *arr, char type, void *value) {
+void dyn_add(DynArr *arr, char type, size_t size, void *value) {
   if (!arr) {
     exit(EXIT_FAILURE);
   }
@@ -159,9 +159,45 @@ void dyn_add(DynArr *arr, char type, void *value) {
 
   DynItem item;
   item.type = type;
+  switch (type) {
+  case 'i':
+    int *copied_int = malloc(size);
+    if (!copied_int) {
+      exit(EXIT_FAILURE);
+    }
+    copied_int = (int *)value;
+    item.value = copied_int;
+    break;
+  case 'c':
+    char *copied_char = malloc(size);
+    if (!copied_char) {
+      exit(EXIT_FAILURE);
+    }
+    copied_char = (char *)value;
+    item.value = copied_char;
+    break;
+  case 's':
+    char *copied_string = malloc(size);
+    if (!copied_string) {
+      exit(EXIT_FAILURE);
+    }
+    memcpy(copied_string, value, size);
+    item.value = copied_string;
+    break;
+  default:
+    printf("ERROR\n");
+  }
   item.value = value;
 
   arr->data[arr->count++] = item;
+}
+
+void free_dyn(DynArr *arr) {
+  for (int i = 0; i < arr->count; i++) {
+    free(arr->data[i].value);
+  }
+  free(arr->data);
+  free(arr);
 }
 
 void print_dyn(DynArr *arr) {

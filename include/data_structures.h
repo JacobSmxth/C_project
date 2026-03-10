@@ -66,8 +66,10 @@ void free_list(LlNode *list);
 
 DynArr *create_dynarr();
 
-void dyn_add(DynArr *arr, char type, void *value);
+void dyn_add(DynArr *arr, char type, size_t size, void *value);
 
 void print_dyn(DynArr *arr);
+
+void free_dyn(DynArr *arr);
 
 #endif

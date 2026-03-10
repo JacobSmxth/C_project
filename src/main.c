@@ -12,7 +12,7 @@ int main() {
 
   DynArr *dynArr = create_dynarr();
 
-  dyn_add(dynArr, 's', "Jacob Smith");
-  dyn_add(dynArr, 'i', &my_age);
+  dyn_add(dynArr, 's', strlen(my_name) + 1, &my_name);
+  dyn_add(dynArr, 'i', sizeof(my_age), &my_age);
   print_dyn(dynArr);
 }
