@@ -114,15 +114,6 @@ void free_list(LlNode *list) {
   }
 }
 
-// Struct layout
-//
-// typedef struct DynArr {
-//   int count;
-//   int capacity;
-//   void **data;
-// } DynArr;
-//
-
 // Dynamic Array Functions
 DynArr *create_dynarr() {
 
@@ -165,7 +156,7 @@ void dyn_add(DynArr *arr, char type, size_t size, void *value) {
     if (!copied_int) {
       exit(EXIT_FAILURE);
     }
-    copied_int = (int *)value;
+    *copied_int = *(int *)value;
     item.value = copied_int;
     break;
   case 'c':
@@ -173,7 +164,7 @@ void dyn_add(DynArr *arr, char type, size_t size, void *value) {
     if (!copied_char) {
       exit(EXIT_FAILURE);
     }
-    copied_char = (char *)value;
+    *copied_char = *(char *)value;
     item.value = copied_char;
     break;
   case 's':
@@ -186,8 +177,8 @@ void dyn_add(DynArr *arr, char type, size_t size, void *value) {
     break;
   default:
     printf("ERROR\n");
+    exit(EXIT_FAILURE);
   }
-  item.value = value;
 
   arr->data[arr->count++] = item;
 }

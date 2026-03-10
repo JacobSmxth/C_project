@@ -3,6 +3,10 @@
 
 #include <stddef.h>
 
+/* =============
+ * Linked List
+ * ============= */
+
 /**
  * @struct LlNode
  * @brief Opaque node type for this generic linked list
@@ -14,10 +18,6 @@
  */
 typedef struct LlNode LlNode;
 
-typedef struct DynItem DynItem;
-
-typedef struct DynArr DynArr;
-
 /**
  * @brief Create an empty list
  *
@@ -25,7 +25,7 @@ typedef struct DynArr DynArr;
  * @return Technically a pointer to the head of the list, but it is just NULL.
  *
  */
-LlNode *create_list();
+LlNode *create_list(void);
 
 /**
  * @brief Create a new node for linked list
@@ -64,12 +64,48 @@ void print_list(LlNode *list);
  */
 void free_list(LlNode *list);
 
-DynArr *create_dynarr();
+/* =============
+ * Dyn Arr
+ * ============= */
 
+/**
+ * @brief Opaque dynamic array
+ *
+ * This is the heart and soul of the dynamic array
+ */
+typedef struct DynArr DynArr;
+
+/**
+ * @brief Create a generic Dynamic Array
+ *
+ * @return Pointer to list, that starts with a count of 0, capacity of 1, and
+ * storage for one DynItem
+ */
+DynArr *create_dynarr(void);
+
+/**
+ * @brief Add to the Dynamic array specified
+ *
+ * @param arr This is the array we are adding to.
+ * @param type The type of item we are adding ('i': int, 'c': char, 's': string)
+ * @param size The size of the item in bytes
+ * @param value The Value of the item
+ */
 void dyn_add(DynArr *arr, char type, size_t size, void *value);
 
+/**
+ * @brief Traverses the array based on the count and prints each item's value
+ *
+ * @param arr The array we are printing
+ */
 void print_dyn(DynArr *arr);
 
+/**
+ * @brief Traverses the array using count and frees each items value, then the
+ * data, then the array
+ *
+ // * @param arr The array we are freeing
+ */
 void free_dyn(DynArr *arr);
 
 #endif
