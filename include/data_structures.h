@@ -104,7 +104,7 @@ void print_dyn(DynArr *arr);
  * @brief Traverses the array using count and frees each items value, then the
  * data, then the array
  *
- // * @param arr The array we are freeing
+ * @param arr The array we are freeing
  */
 void free_dyn(DynArr *arr);
 

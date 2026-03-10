@@ -28,7 +28,8 @@ LlNode *create_list() { return NULL; }
 LlNode *create_node(char type_of_value, size_t size, void *new_value) {
   LlNode *new_node = malloc(sizeof(LlNode));
   if (!new_node) {
-    exit(EXIT_FAILURE);
+    perror("create_node");
+    return NULL;
   }
 
   new_node->next = NULL;
@@ -39,7 +40,8 @@ LlNode *create_node(char type_of_value, size_t size, void *new_value) {
     int *copied_int = malloc(size);
     if (!copied_int) {
       free(new_node);
-      exit(EXIT_FAILURE);
+      perror("hard copying integer");
+      return NULL;
     }
     *copied_int = *(int *)new_value;
     new_node->value = copied_int;
@@ -48,7 +50,8 @@ LlNode *create_node(char type_of_value, size_t size, void *new_value) {
     char *copied_char = malloc(size);
     if (!copied_char) {
       free(new_node);
-      exit(EXIT_FAILURE);
+      perror("hard copying character");
+      return NULL;
     }
     *copied_char = *(char *)new_value;
     new_node->value = copied_char;
@@ -57,14 +60,16 @@ LlNode *create_node(char type_of_value, size_t size, void *new_value) {
     char *copied_string = malloc(size);
     if (!copied_string) {
       free(new_node);
-      exit(EXIT_FAILURE);
+      perror("hard copying string");
+      return NULL;
     }
     memcpy(copied_string, new_value, size);
     new_node->value = copied_string;
     break;
   default:
+    fprintf(stderr, "create_node: unknown type '%c'\n", type_of_value);
     free(new_node);
-    exit(EXIT_FAILURE);
+    return NULL;
   }
 
   return new_node;
@@ -98,7 +103,8 @@ void print_list(LlNode *list) {
       printf("%s\n", (char *)current->value);
       break;
     default:
-      printf("Corrupt LlNode in list...\n");
+      printf("I actually don't know how you managed to get this here. "
+             "Impressive...\n");
     }
     current = current->next;
   }
@@ -116,18 +122,19 @@ void free_list(LlNode *list) {
 
 // Dynamic Array Functions
 DynArr *create_dynarr() {
-
   DynArr *arr = malloc(sizeof(DynArr));
-
   if (!arr) {
-    exit(EXIT_FAILURE);
+    perror("create_dynarr");
+    return NULL;
   }
 
   arr->count = 0;
   arr->capacity = 1;
   arr->data = malloc(sizeof(DynItem) * arr->capacity);
   if (!arr->data) {
-    exit(EXIT_FAILURE);
+    free(arr);
+    perror("create_dynarr");
+    return NULL;
   }
 
   return arr;
@@ -135,14 +142,16 @@ DynArr *create_dynarr() {
 
 void dyn_add(DynArr *arr, char type, size_t size, void *value) {
   if (!arr) {
-    exit(EXIT_FAILURE);
+    fprintf(stderr, "dyn_add: array doesn't exist");
+    return;
   }
 
   if (arr->count >= arr->capacity) {
     arr->capacity *= 2;
     DynItem *tmp = realloc(arr->data, sizeof(DynItem) * arr->capacity);
     if (!tmp) {
-      exit(EXIT_FAILURE);
+      perror("dyn_add");
+      return;
     }
 
     arr->data = tmp;
@@ -154,7 +163,8 @@ void dyn_add(DynArr *arr, char type, size_t size, void *value) {
   case 'i':
     int *copied_int = malloc(size);
     if (!copied_int) {
-      exit(EXIT_FAILURE);
+      perror("hard copying integer");
+      return;
     }
     *copied_int = *(int *)value;
     item.value = copied_int;
@@ -162,7 +172,8 @@ void dyn_add(DynArr *arr, char type, size_t size, void *value) {
   case 'c':
     char *copied_char = malloc(size);
     if (!copied_char) {
-      exit(EXIT_FAILURE);
+      perror("hard copying character");
+      return;
     }
     *copied_char = *(char *)value;
     item.value = copied_char;
@@ -170,14 +181,15 @@ void dyn_add(DynArr *arr, char type, size_t size, void *value) {
   case 's':
     char *copied_string = malloc(size);
     if (!copied_string) {
-      exit(EXIT_FAILURE);
+      perror("hard copying string");
+      return;
     }
     memcpy(copied_string, value, size);
     item.value = copied_string;
     break;
   default:
-    printf("ERROR\n");
-    exit(EXIT_FAILURE);
+    fprintf(stderr, "dyn_add: unknown type: '%c'\n", type);
+    return;
   }
 
   arr->data[arr->count++] = item;
@@ -204,7 +216,9 @@ void print_dyn(DynArr *arr) {
       printf("%d. %s\n", i + 1, (char *)arr->data[i].value);
       break;
     default:
-      printf("%d. ERROR WITH TYPE\n", i + 1);
+      printf("%d. BRO I DONT GET HOW YOU WOULD GET THIS TO HAPPEN. TELL ME: "
+             "jacob@jsmitty.dev \n",
+             i + 1);
     }
   }
 }
