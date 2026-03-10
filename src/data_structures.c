@@ -210,7 +210,7 @@ void print_dyn(DynArr *arr) {
       printf("%d. %d\n", i + 1, *(int *)arr->data[i].value);
       break;
     case 'c':
-      printf("%d. %d\n", i + 1, *(char *)arr->data[i].value);
+      printf("%d. %c\n", i + 1, *(char *)arr->data[i].value);
       break;
     case 's':
       printf("%d. %s\n", i + 1, (char *)arr->data[i].value);
