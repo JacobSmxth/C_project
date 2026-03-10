@@ -148,9 +148,16 @@ DynArr *create_dynarr() {
   return arr;
 }
 
-void dyn_add(DynArr *arr, char type, size_t size, void *value) {
+void _dyn_add(DynArr *arr, char type, size_t size, void *value,
+              const char *file, int line) {
   if (!arr) {
     fprintf(stderr, "dyn_add: array doesn't exist\n");
+    return;
+  }
+
+  if (!value) {
+    fprintf(stderr, "You can't add an item that is NULL (called at %s:%d)\n",
+            file, line);
     return;
   }
 

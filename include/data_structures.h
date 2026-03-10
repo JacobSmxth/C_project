@@ -104,7 +104,17 @@ DynArr *create_dynarr(void);
  * @param size The size of the item in bytes
  * @param value The Value of the item
  */
-void dyn_add(DynArr *arr, char type, size_t size, void *value);
+void _dyn_add(DynArr *arr, char type, size_t size, void *value,
+              const char *file, int line);
+
+/*
+ *
+ * I made a macro wrapper to experiement with the file and line number where an
+ * error occured
+ *
+ */
+#define dyn_add(arr, type, size, value)                                        \
+  _dyn_add(arr, type, size, value, CALL_INFO)
 
 /**
  * @brief Traverses the array based on the count and prints each item's value
