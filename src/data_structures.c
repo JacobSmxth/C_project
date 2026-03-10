@@ -3,12 +3,26 @@
 #include <stdlib.h>
 #include <string.h>
 
+// Dynamic Array Structure
+typedef struct DynItem {
+  void *value;
+  char type;
+} DynItem;
+
+typedef struct DynArr {
+  int count;
+  int capacity;
+  DynItem *data;
+} DynArr;
+
+// Linked List Structure
 typedef struct LlNode {
   struct LlNode *next;
   char type_of_value;
   void *value;
 } LlNode;
 
+// Linked List Functions
 LlNode *create_list() { return NULL; }
 
 LlNode *create_node(char type_of_value, size_t size, void *new_value) {
@@ -97,5 +111,73 @@ void free_list(LlNode *list) {
     free(current->value);
     free(current);
     current = next;
+  }
+}
+
+// Struct layout
+//
+// typedef struct DynArr {
+//   int count;
+//   int capacity;
+//   void **data;
+// } DynArr;
+//
+
+// Dynamic Array Functions
+DynArr *create_dynarr() {
+
+  DynArr *arr = malloc(sizeof(DynArr));
+
+  if (!arr) {
+    exit(EXIT_FAILURE);
+  }
+
+  arr->count = 0;
+  arr->capacity = 1;
+  arr->data = malloc(sizeof(DynItem) * arr->capacity);
+  if (!arr->data) {
+    exit(EXIT_FAILURE);
+  }
+
+  return arr;
+}
+
+void dyn_add(DynArr *arr, char type, void *value) {
+  if (!arr) {
+    exit(EXIT_FAILURE);
+  }
+
+  if (arr->count >= arr->capacity) {
+    arr->capacity *= 2;
+    DynItem *tmp = realloc(arr->data, sizeof(DynItem) * arr->capacity);
+    if (!tmp) {
+      exit(EXIT_FAILURE);
+    }
+
+    arr->data = tmp;
+  }
+
+  DynItem item;
+  item.type = type;
+  item.value = value;
+
+  arr->data[arr->count++] = item;
+}
+
+void print_dyn(DynArr *arr) {
+  for (int i = 0; i < arr->count; i++) {
+    switch (arr->data[i].type) {
+    case 'i':
+      printf("%d. %d\n", i + 1, *(int *)arr->data[i].value);
+      break;
+    case 'c':
+      printf("%d. %d\n", i + 1, *(char *)arr->data[i].value);
+      break;
+    case 's':
+      printf("%d. %s\n", i + 1, (char *)arr->data[i].value);
+      break;
+    default:
+      printf("%d. ERROR WITH TYPE\n", i + 1);
+    }
   }
 }
