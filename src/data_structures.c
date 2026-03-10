@@ -3,16 +3,16 @@
 #include <stdlib.h>
 #include <string.h>
 
-typedef struct Node {
-  struct Node *next;
+typedef struct LlNode {
+  struct LlNode *next;
   char type_of_value;
   void *value;
-} Node;
+} LlNode;
 
-Node *create_list() { return NULL; }
+LlNode *create_list() { return NULL; }
 
-Node *create_node(char type_of_value, size_t size, void *new_value) {
-  Node *new_node = malloc(sizeof(Node));
+LlNode *create_node(char type_of_value, size_t size, void *new_value) {
+  LlNode *new_node = malloc(sizeof(LlNode));
   if (!new_node) {
     exit(EXIT_FAILURE);
   }
@@ -56,21 +56,21 @@ Node *create_node(char type_of_value, size_t size, void *new_value) {
   return new_node;
 }
 
-void list_add(Node **list, Node *new_node) {
+void list_add(LlNode **list, LlNode *new_node) {
   if (!*list) {
     *list = new_node;
     return;
   }
 
-  Node *current = *list;
+  LlNode *current = *list;
   while (current->next) {
     current = current->next;
   }
   current->next = new_node;
 }
 
-void print_list(Node *list) {
-  Node *current = list;
+void print_list(LlNode *list) {
+  LlNode *current = list;
 
   while (current) {
     switch (current->type_of_value) {
@@ -84,16 +84,16 @@ void print_list(Node *list) {
       printf("%s\n", (char *)current->value);
       break;
     default:
-      printf("Corrupt Node in list...\n");
+      printf("Corrupt LlNode in list...\n");
     }
     current = current->next;
   }
 }
 
-void free_list(Node *list) {
-  Node *current = list;
+void free_list(LlNode *list) {
+  LlNode *current = list;
   while (current) {
-    Node *next = current->next;
+    LlNode *next = current->next;
     free(current->value);
     free(current);
     current = next;

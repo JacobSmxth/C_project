@@ -4,16 +4,16 @@
 
 #include <stddef.h>
 
-typedef struct Node Node;
+typedef struct LlNode LlNode;
 
-Node *create_list();
+LlNode *create_list();
 
-Node *create_node(char type_of_value, size_t size, void *new_value);
+LlNode *create_node(char type_of_value, size_t size, void *new_value);
 
-void list_add(Node **list, Node *new_node);
+void list_add(LlNode **list, LlNode *new_node);
 
-void print_list(Node *list);
+void print_list(LlNode *list);
 
-void free_list(Node *list);
+void free_list(LlNode *list);
 
 #endif
