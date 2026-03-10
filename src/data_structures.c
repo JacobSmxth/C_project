@@ -142,7 +142,7 @@ DynArr *create_dynarr() {
 
 void dyn_add(DynArr *arr, char type, size_t size, void *value) {
   if (!arr) {
-    fprintf(stderr, "dyn_add: array doesn't exist");
+    fprintf(stderr, "dyn_add: array doesn't exist\n");
     return;
   }
 
