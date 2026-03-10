@@ -1,6 +1,8 @@
 #ifndef DATA_STRUCTURES_H
 #define DATA_STRUCTURES_H
 
+#define CALL_INFO __FILE__, __LINE__
+
 #include <stddef.h>
 
 /* =============
@@ -36,9 +38,20 @@ LlNode *create_list(void);
  *
  * @return Pointer to this new node
  */
-LlNode *create_node(char type_of_value, size_t size, void *new_value);
+LlNode *_create_node(char type_of_value, size_t size, void *new_value,
+                     const char *file, int line);
+
+/*
+ *
+ * I made a macro wrapper to experiement with the file and line number where an
+ * error occured
+ *
+ */
+#define create_node(type, size, value)                                         \
+  _create_node(type, size, value, CALL_INFO)
 
 /**
+ *
  * @brief Add a node to the end of the list.
  *
  * @param list Pointer to the list head pointer

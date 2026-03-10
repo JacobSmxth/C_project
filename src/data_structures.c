@@ -25,10 +25,18 @@ typedef struct LlNode {
 // Linked List Functions
 LlNode *create_list() { return NULL; }
 
-LlNode *create_node(char type_of_value, size_t size, void *new_value) {
+LlNode *_create_node(char type_of_value, size_t size, void *new_value,
+                     const char *file, int line) {
   LlNode *new_node = malloc(sizeof(LlNode));
   if (!new_node) {
     perror("create_node");
+    return NULL;
+  }
+  if (!new_value) {
+    free(new_node);
+    fprintf(stderr,
+            "The value of the node can't be 'NULL' (called from %s:%d)\n", file,
+            line);
     return NULL;
   }
 
