@@ -49,18 +49,18 @@ int main() {
 
     input[strcspn(input, "\n")] = '\0';
 
-    char type;
+    ValueType type;
     if (is_string(input)) {
-      type = 's';
+      type = TYPE_STRING;
       LlNode *new_node = create_node(type, strlen(input) + 1, input);
       list_add(&the_values, new_node);
     } else if (is_int(input)) {
-      type = 'i';
+      type = TYPE_INT;
       int parsed = atoi(input);
       LlNode *new_node = create_node(type, sizeof(int), &parsed);
       list_add(&the_values, new_node);
     } else if (is_char(input)) {
-      type = 'c';
+      type = TYPE_CHAR;
       char parsed = input[0];
       LlNode *new_node = create_node(type, sizeof(char), &parsed);
       list_add(&the_values, new_node);

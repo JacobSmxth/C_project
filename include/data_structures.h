@@ -5,6 +5,8 @@
 
 #include <stddef.h>
 
+typedef enum { TYPE_INT, TYPE_CHAR, TYPE_STRING } ValueType;
+
 /* =============
  * Linked List
  * ============= */
@@ -38,7 +40,7 @@ LlNode *create_list(void);
  *
  * @return Pointer to this new node
  */
-LlNode *_create_node(char type_of_value, size_t size, void *new_value,
+LlNode *_create_node(ValueType type_of_value, size_t size, void *new_value,
                      const char *file, int line);
 
 /*
@@ -104,7 +106,7 @@ DynArr *create_dynarr(void);
  * @param size The size of the item in bytes
  * @param value The Value of the item
  */
-void _dyn_add(DynArr *arr, char type, size_t size, void *value,
+void _dyn_add(DynArr *arr, ValueType type, size_t size, void *value,
               const char *file, int line);
 
 /*

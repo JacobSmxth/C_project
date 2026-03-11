@@ -6,7 +6,7 @@
 // Dynamic Array Structure
 typedef struct DynItem {
   void *value;
-  char type;
+  ValueType type;
 } DynItem;
 
 typedef struct DynArr {
@@ -18,14 +18,14 @@ typedef struct DynArr {
 // Linked List Structure
 typedef struct LlNode {
   struct LlNode *next;
-  char type_of_value;
+  ValueType type_of_value;
   void *value;
 } LlNode;
 
 // Linked List Functions
 LlNode *create_list() { return NULL; }
 
-LlNode *_create_node(char type_of_value, size_t size, void *new_value,
+LlNode *_create_node(ValueType type_of_value, size_t size, void *new_value,
                      const char *file, int line) {
   LlNode *new_node = malloc(sizeof(LlNode));
   if (!new_node) {
@@ -44,7 +44,7 @@ LlNode *_create_node(char type_of_value, size_t size, void *new_value,
   new_node->type_of_value = type_of_value;
 
   switch (type_of_value) {
-  case 'i':
+  case TYPE_INT:
     int *copied_int = malloc(size);
     if (!copied_int) {
       free(new_node);
@@ -54,7 +54,7 @@ LlNode *_create_node(char type_of_value, size_t size, void *new_value,
     *copied_int = *(int *)new_value;
     new_node->value = copied_int;
     break;
-  case 'c':
+  case TYPE_CHAR:
     char *copied_char = malloc(size);
     if (!copied_char) {
       free(new_node);
@@ -64,7 +64,7 @@ LlNode *_create_node(char type_of_value, size_t size, void *new_value,
     *copied_char = *(char *)new_value;
     new_node->value = copied_char;
     break;
-  case 's':
+  case TYPE_STRING:
     char *copied_string = malloc(size);
     if (!copied_string) {
       free(new_node);
@@ -101,13 +101,13 @@ void print_list(LlNode *list) {
 
   while (current) {
     switch (current->type_of_value) {
-    case 'i':
+    case TYPE_INT:
       printf("%d\n", *(int *)current->value);
       break;
-    case 'c':
+    case TYPE_CHAR:
       printf("%c\n", *(char *)current->value);
       break;
-    case 's':
+    case TYPE_STRING:
       printf("%s\n", (char *)current->value);
       break;
     default:
@@ -148,7 +148,7 @@ DynArr *create_dynarr() {
   return arr;
 }
 
-void _dyn_add(DynArr *arr, char type, size_t size, void *value,
+void _dyn_add(DynArr *arr, ValueType type, size_t size, void *value,
               const char *file, int line) {
   if (!arr) {
     fprintf(stderr, "dyn_add: array doesn't exist\n");
@@ -175,7 +175,7 @@ void _dyn_add(DynArr *arr, char type, size_t size, void *value,
   DynItem item;
   item.type = type;
   switch (type) {
-  case 'i':
+  case TYPE_INT:
     int *copied_int = malloc(size);
     if (!copied_int) {
       perror("hard copying integer");
@@ -184,7 +184,7 @@ void _dyn_add(DynArr *arr, char type, size_t size, void *value,
     *copied_int = *(int *)value;
     item.value = copied_int;
     break;
-  case 'c':
+  case TYPE_CHAR:
     char *copied_char = malloc(size);
     if (!copied_char) {
       perror("hard copying character");
@@ -193,7 +193,7 @@ void _dyn_add(DynArr *arr, char type, size_t size, void *value,
     *copied_char = *(char *)value;
     item.value = copied_char;
     break;
-  case 's':
+  case TYPE_STRING:
     char *copied_string = malloc(size);
     if (!copied_string) {
       perror("hard copying string");
@@ -203,7 +203,7 @@ void _dyn_add(DynArr *arr, char type, size_t size, void *value,
     item.value = copied_string;
     break;
   default:
-    fprintf(stderr, "dyn_add: unknown type: '%c'\n", type);
+    fprintf(stderr, "dyn_add: unknown type\n");
     return;
   }
 
@@ -221,13 +221,13 @@ void free_dyn(DynArr *arr) {
 void print_dyn(DynArr *arr) {
   for (int i = 0; i < arr->count; i++) {
     switch (arr->data[i].type) {
-    case 'i':
+    case TYPE_INT:
       printf("%d. %d\n", i + 1, *(int *)arr->data[i].value);
       break;
-    case 'c':
+    case TYPE_CHAR:
       printf("%d. %c\n", i + 1, *(char *)arr->data[i].value);
       break;
-    case 's':
+    case TYPE_STRING:
       printf("%d. %s\n", i + 1, (char *)arr->data[i].value);
       break;
     default:
