@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
 typedef enum { TYPE_INT, TYPE_CHAR, TYPE_STRING } ValueType;
 
 typedef struct HashNode {
@@ -72,6 +73,25 @@ void print_hashmap(HashMap *map) {
       cur = cur->next;
     }
   }
+}
+
+void free_hashmap(HashMap **map) {
+  if (map == NULL || *map == NULL) {
+    return;
+  }
+
+  for (int i = 0; i < (*map)->numBuckets; i++) {
+    HashNode *cur = (*map)->buckets[i];
+    while (cur) {
+      HashNode *next = cur->next;
+      free(cur->key);
+      free(cur);
+      cur = next;
+    }
+  }
+  free((*map)->buckets);
+  free(*map);
+  *map = NULL;
 }
 
 int main() {
