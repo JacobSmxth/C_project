@@ -6,7 +6,8 @@ typedef enum { TYPE_INT, TYPE_CHAR, TYPE_STRING } ValueType;
 
 typedef struct HashNode {
   char *key;
-  int value;
+  ValueType type;
+  void *value;
   struct HashNode *next;
 } HashNode;
 
@@ -15,13 +16,13 @@ typedef struct {
   int numBuckets;
 } HashMap;
 
-int hashKey(int num, char *key) {
+int hashKey(int numBuckets, char *key) {
   int total = 0;
   for (; *key; key++) {
     total += *key;
   }
 
-  return total % num;
+  return total % numBuckets;
 }
 
 HashMap *create_hashmap(int numBuckets) {
@@ -35,22 +36,41 @@ HashMap *create_hashmap(int numBuckets) {
   return newHash;
 }
 
-void addHash(HashMap *hash, char *key, int value) {
-  int index = hashKey(hash->numBuckets, key);
-
+HashNode *makeNode(char *key, ValueType type, void *value) {
   HashNode *newNode = malloc(sizeof(HashNode));
-  if (!newNode)
-    return;
+  if (!newNode) {
+    return NULL;
+  }
+  // Decided to use the if statement this instead of switch for seperate scopes
+  if (type == TYPE_INT) {
+    newNode->value = (int *)value;
+  } else if (type == TYPE_CHAR) {
+    newNode->value = (char *)value;
+  } else if (type == TYPE_STRING) {
+    newNode->value = (char *)value;
+  } else {
+    perror("Unknown type\n");
+    free(newNode);
+    return NULL;
+  }
 
+  newNode->type = type;
   newNode->key = malloc(strlen(key) + 1);
   if (!newNode->key) {
     free(newNode);
-    return;
+    fprintf(stderr, "failed to malloc for key\n");
+    return NULL;
   }
-
   memcpy(newNode->key, key, strlen(key) + 1);
-  newNode->value = value;
+
   newNode->next = NULL;
+
+  return newNode;
+}
+
+void addHash(HashMap *hash, char *key, ValueType type, void *value) {
+  int index = hashKey(hash->numBuckets, key);
+  HashNode *newNode = makeNode(key, type, value);
 
   if (!hash->buckets[index]) {
     hash->buckets[index] = newNode;
@@ -69,7 +89,18 @@ void print_hashmap(HashMap *map) {
   for (int i = 0; i < num; i++) {
     HashNode *cur = map->buckets[i];
     while (cur) {
-      printf("%s: %d\n", cur->key, cur->value);
+      printf("%s: ", cur->key);
+      if (cur->type == TYPE_INT) {
+        printf("%d\n", *(int *)cur->value);
+      } else if (cur->type == TYPE_CHAR) {
+        printf("%c\n", *(char *)cur->value);
+      } else if (cur->type == TYPE_STRING) {
+        printf("%s\n", (char *)cur->value);
+      } else {
+        fprintf(stderr, "HOW DO WE GET HERE??\n");
+        return;
+      }
+
       cur = cur->next;
     }
   }
@@ -96,9 +127,13 @@ void free_hashmap(HashMap **map) {
 
 int main() {
   HashMap *map = create_hashmap(10);
-  addHash(map, "Youssef", 10);
-  addHash(map, "Jacob", 20);
-  addHash(map, "Dan", 31);
+  char jacob_age = 'j';
+  int youssef_age = 10;
+  char *dans_age = "thirty one";
+
+  addHash(map, "Youssef", TYPE_INT, &youssef_age);
+  addHash(map, "Jacob", TYPE_CHAR, &jacob_age);
+  addHash(map, "Dan", TYPE_STRING, dans_age);
   print_hashmap(map);
 
   return 0;
